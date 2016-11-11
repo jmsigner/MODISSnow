@@ -23,7 +23,4 @@ RasterLayer.
 \description{
 Downloads MODIS snow data and returns a tile as raster tile.
 }
-\examples{
-
-}
 

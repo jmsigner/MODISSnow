@@ -11,7 +11,6 @@
 #' @return RasterLayer.
 #' @export
 #'
-#' @examples
 #'
 download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, ...) {
   folder_date <- format(date, "%Y.%m.%d")
@@ -36,10 +35,9 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, ...) {
 #' @param progress Indicates whether or not progress is displayed.
 #' @param clean Indidcates whether or not temporary files are deleted.
 #'
-#' @return
+#' @return RasterLayer
 #' @export
 #'
-#' @examples
 get_tile <- function(ftp, tile, progress = FALSE, clean = TRUE){
 
   out_file <- file.path(tempdir(), tile)
@@ -47,7 +45,7 @@ get_tile <- function(ftp, tile, progress = FALSE, clean = TRUE){
   dst_file <- paste0(tools::file_path_sans_ext(new_file), "_epsg4326.tif")
 
   if (progress) cat("[", format(Sys.time(), "%H-%M-%S"), "]: Starting download")
-  download.file(paste(ftp, tile, sep = "/"), out_file)
+  utils::download.file(paste(ftp, tile, sep = "/"), out_file)
 
   if (progress) cat("[", format(Sys.time(), "%H-%M-%S"), "]: Processing file")
   sds <- gdalUtils::get_subdatasets(out_file)

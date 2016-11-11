@@ -15,6 +15,9 @@ get_tile(ftp, tile, progress = FALSE, clean = TRUE)
 
 \item{clean}{Indidcates whether or not temporary files are deleted.}
 }
+\value{
+RasterLayer
+}
 \description{
 Download a MODIS tile
 }
