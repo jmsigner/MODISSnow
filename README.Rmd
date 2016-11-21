@@ -1,1 +1,18 @@
 # MODISSnow
+
+Package to download MODIS snow data.
+
+# Install
+
+```{r}
+devtools::install_github("jmsigner/MODISSnow")
+```
+
+
+# Usage
+
+```{r, eval = FALSE}
+s <- MODISSnow::download_data(ymd("2016-01-03"), h = 18, v = 04)
+plot(s)
+```
+
