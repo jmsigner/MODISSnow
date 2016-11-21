@@ -23,7 +23,9 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, ...) {
   fls <- RCurl::getURL(ftp, dirlistonly = TRUE)
   fls <- unlist(strsplit(fls, "\\n"))
   fls <- fls[grepl("hdf$", fls)]
-  tile <- fls[grepl(paste0(sat, ".A", lubridate::year(date), "[0-9]{3}.h02v10"), fls) ]
+  tile <- fls[grepl(
+    paste0(sat, ".A", lubridate::year(date), "[0-9]{3}.h", formatC(h, width = 2, flag = 0), "v", formatC(v, width = 2, flag = 0)),
+    fls)]
   get_tile(ftp, tile, ...)
 }
 

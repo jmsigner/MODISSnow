@@ -5,7 +5,7 @@ Version: 0.0.0.1
 Author: Johannes Signer
 Authors@R: person("Johannes", "Signer", email = "jmsigner@gmail.com",
   role = c("aut", "cre"))
-Description: Download MODIS snow data in R.
+Description: Download MODIS snow data within R.
 Imports:
     raster,
     RCurl,
