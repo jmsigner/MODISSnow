@@ -1,18 +1,56 @@
-#' Download MODIS snow data
+#' @title
+#' Download MODIS snowdata from the National Snow and Ice Data Center.
 #'
-#' Downloads MODIS snow data and returns a tile as raster tile.
+#' @description
+#' Given a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to longitude/latitude (EPSG:4326).
 #'
+#' @details
+#' When downloading the data, the correct tile has to be specified. At the moment there is no automated way of doing this. This means that the user has to consult the \href{https://modis-land.gsfc.nasa.gov/MODLAND_grid.html}{MODIS grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} can be use.
+#'
+#'
+#' @param ftp Address of the repository.
+#' @param tile Name of the tile.
+#' @param progress Indicates whether or not progress is displayed.
+#' @param clean Indidcates whether or not temporary files are deleted.
 #' @param date Day for which snow data should be downloaded as POSIXct.
-#' @param sat Satelite mission used. Currently only "MYD10A1" is supported.
-#' @param h horizontal tile number. See also details.
-#' @param v vertical tile number. See also details.
-#' @param ... further arguments passed to get_tile().
+#' @param sat Satelite mission used. Currently only Terra ("MYD10A1") and Aqua ("MOD10A1") are supported.
+#' @param h Horizontal tile number. See also details.
+#' @param v Vertical tile number. See also details.
+#' @param printFTP If \code{TRUE}, the FTP address where the data are downloaded is printed.
+#' @param ... Further arguments passed to \code{get_tile()}.
 #'
-#' @return RasterLayer.
+#' @return
+#' The function returns an object of the class \code{RasterLayer} with the following cell values:
+#' \itemize{
+#'  \item 0-100 NDSI snow cover
+#'  \item 200 missing data
+#'  \item 201 no decision
+#'  \item 211 night
+#'  \item 237 inland water
+#'  \item 239 ocean
+#'  \item 250 cloud
+#'  \item 254 detector saturated
+#'  \item 255 fill
+#' }
+#' but see also the documentation for the \emph{NDSI_SNOW_COVER} \href{http://nsidc.org/data/MOD10A1}{here}.
+#' @references
+#' When using the NDSI snow cover data, please acknowledge the data approriately by
+#' \enumerate{
+#'   \item reading the \href{http://nsidc.org/about/use_copyright.html}{use and copyright}
+#'   \item citing the original data: \emph{Hall, D. K. and G. A. Riggs. 2016. MODIS/[Terra/Aqua] Snow Cover Daily L3 Global 500m Grid, Version 6. [Indicate subset used]. Boulder, Colorado USA. NASA National Snow and Ice Data Center Distributed Active Archive Center. doi: http://dx.doi.org/10.5067/MODIS/MOD10A1.006. [Date Accessed].}
+#' }
 #' @export
+#' @rdname MODISSnow
 #'
-#'
-download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, ...) {
+#' @examples
+#' \dontrun{
+#' # Download MODIS snow data for a central europe h = 18 and v = 5 for the 1 of January 2016
+#' dat <- download_data(lubridate::ymd("2016-01-01"), h = 18, v = 5)
+#' class(dat)
+#' raster::plot(dat)
+#' }
+
+download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALSE, ...) {
   folder_date <- format(date, "%Y.%m.%d")
   ftp <- if(sat == 'MYD10A1') {
     paste0('ftp://n5eil01u.ecs.nsidc.org/SAN/MOSA/', sat, '.006/', folder_date, '/')
@@ -20,7 +58,15 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, ...) {
     paste0('ftp://n5eil01u.ecs.nsidc.org/SAN/MOST/', sat, '.006/', folder_date, '/')
   }
 
-  fls <- RCurl::getURL(ftp, dirlistonly = TRUE)
+  if (printFTP)
+    print(ftp)
+
+  # use handels: http://stackoverflow.com/questions/37713293/how-to-circumvent-ftp-server-slowdown
+  curl <- RCurl::getCurlHandle()
+  fls <- RCurl::getURL(ftp, curl = curl, dirlistonly = TRUE)
+  rm(curl)
+  base::gc()
+
   fls <- unlist(strsplit(fls, "\\n"))
   fls <- fls[grepl("hdf$", fls)]
   tile <- fls[grepl(
@@ -30,14 +76,8 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, ...) {
 }
 
 
-#' Download a MODIS tile
 #'
-#' @param ftp Address of the repository.
-#' @param tile Name of the tile.
-#' @param progress Indicates whether or not progress is displayed.
-#' @param clean Indidcates whether or not temporary files are deleted.
-#'
-#' @return RasterLayer
+#' @rdname  MODISSnow
 #' @export
 #'
 get_tile <- function(ftp, tile, progress = FALSE, clean = TRUE){
@@ -68,3 +108,4 @@ get_tile <- function(ftp, tile, progress = FALSE, clean = TRUE){
   return(res)
 
 }
+

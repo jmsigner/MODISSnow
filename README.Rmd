@@ -1,6 +1,6 @@
 # MODISSnow
 
-Package to download MODIS snow data.
+Package to download MODIS snow data from [The National Snow & Ice Data Center](http://nsidc.org/).
 
 # Install
 
@@ -12,9 +12,10 @@ devtools::install_github("jmsigner/MODISSnow")
 # Usage
 
 ```{r, eval = FALSE}
-library(lubridate)
 library(MODISSnow)
-s <- download_data(ymd("2016-01-03"), h = 18, v = 04)
-plot(s)
+# Download MODIS snow data for a central europe h = 18 and v = 5 for the 1 of January 2016
+dat <- download_data(lubridate::ymd("2016-01-01"), h = 18, v = 5)
+class(dat)
+raster::plot(dat)
 ```
 
