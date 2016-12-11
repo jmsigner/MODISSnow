@@ -13,7 +13,7 @@
 #' @param tile Name of the tile.
 #' @param progress Indicates whether or not progress is displayed.
 #' @param clean Indidcates whether or not temporary files are deleted.
-#' @param date Day for which snow data should be downloaded as POSIXct.
+#' @param date Day for which snow data should be downloaded as \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' @param sat Satellite mission used. Currently Terra (\code{"MYD10A1"}) and Aqua (\code{"MOD10A1"}) are supported.
 #' @param h Horizontal tile number, see also details.
 #' @param v Vertical tile number, see also details.
@@ -57,7 +57,7 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALS
   # checks
 
 
-  folder_date <- format(date, "%Y.%m.%d")
+  folder_date <- base::format(date, "%Y.%m.%d")
   ftp <- if(sat == 'MYD10A1') {
     paste0('ftp://n5eil01u.ecs.nsidc.org/SAN/MOSA/', sat, '.006/', folder_date, '/')
   } else {
