@@ -47,7 +47,9 @@ The function returns an object of the class \code{RasterLayer} with the followin
 but see also the documentation for the \emph{NDSI_SNOW_COVER} \href{http://nsidc.org/data/MOD10A1}{here}.
 }
 \description{
-Given a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to longitude/latitude (EPSG:4326).
+\code{download_data} is the main function to download a scene given the correct tile, date and satellite.
+
+\code{get_tile} downloads a tile, given a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to longitude/latitude (EPSG:4326).
 }
 \details{
 When downloading the data, the correct tile has to be specified. At the moment there is no automated way of doing this. This means that the user has to consult the \href{https://modis-land.gsfc.nasa.gov/MODLAND_grid.html}{MODIS grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} can be use.
