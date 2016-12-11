@@ -7,17 +7,16 @@
 #' \code{get_tile} is a helper function to actually downloads a tile, given a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to longitude/latitude (EPSG:4326).
 #'
 #' @details
-#' When downloading the data, the correct tile has to be specified. At the moment there is no automated way of doing this. This means that the user has to consult the \href{https://modis-land.gsfc.nasa.gov/MODLAND_grid.html}{MODIS grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} can be use.
-#'
+#' When downloading the data, the correct tile has to be specified. At the moment there is no automated way to find the tile. This means that the user has to consult the \href{https://modis-land.gsfc.nasa.gov/MODLAND_grid.html}{MODIS grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} may be used.
 #'
 #' @param ftp Address of the repository.
 #' @param tile Name of the tile.
 #' @param progress Indicates whether or not progress is displayed.
 #' @param clean Indidcates whether or not temporary files are deleted.
 #' @param date Day for which snow data should be downloaded as POSIXct.
-#' @param sat Satelite mission used. Currently only Terra ("MYD10A1") and Aqua ("MOD10A1") are supported.
-#' @param h Horizontal tile number. See also details.
-#' @param v Vertical tile number. See also details.
+#' @param sat Satellite mission used. Currently Terra (\code{"MYD10A1"}) and Aqua (\code{"MOD10A1"}) are supported.
+#' @param h Horizontal tile number, see also details.
+#' @param v Vertical tile number, see also details.
 #' @param printFTP If \code{TRUE}, the FTP address where the data are downloaded is printed.
 #' @param ... Further arguments passed to \code{get_tile()}.
 #'
@@ -35,6 +34,7 @@
 #'  \item 255 fill
 #' }
 #' but see also the documentation for the \emph{NDSI_SNOW_COVER} \href{http://nsidc.org/data/MOD10A1}{here}.
+#'
 #' @references
 #' When using the NDSI snow cover data, please acknowledge the data approriately by
 #' \enumerate{
@@ -53,6 +53,10 @@
 #' }
 
 download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALSE, ...) {
+
+  # checks
+
+
   folder_date <- format(date, "%Y.%m.%d")
   ftp <- if(sat == 'MYD10A1') {
     paste0('ftp://n5eil01u.ecs.nsidc.org/SAN/MOSA/', sat, '.006/', folder_date, '/')
