@@ -1,3 +1,5 @@
+[![Travis-CI Build Status](https://travis-ci.org/jmsigner/MODISSnow.svg?branch=master)](https://travis-ci.org/jmsigner/MODISSnow)
+
 # MODISSnow
 
 Package to download MODIS snow data from [The National Snow & Ice Data Center](http://nsidc.org/).
