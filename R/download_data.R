@@ -1,5 +1,5 @@
 #' @title
-#' Download MODIS snowdata from the National Snow and Ice Data Center.
+#' Download MODIS snow cover data (version 6) from the National Snow and Ice Data Center.
 #'
 #' @description
 #' \code{download_data} is the main function to download a scene given the correct tile, date and satellite.
@@ -80,12 +80,18 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALS
   fls <- RCurl::getURL(ftp, curl = curl, dirlistonly = TRUE)
   rm(curl)
   base::gc()
+  base::gc()
 
   fls <- unlist(strsplit(fls, "\\n"))
   fls <- fls[grepl("hdf$", fls)]
   tile <- fls[grepl(
     paste0(sat, ".A", lubridate::year(date), "[0-9]{3}.h", formatC(h, width = 2, flag = 0), "v", formatC(v, width = 2, flag = 0)),
     fls)]
+
+  if (length(tile) != 1) {
+    stop("MODISSnow: requested tile not found")
+  }
+
   get_tile(ftp, tile, ...)
 }
 
