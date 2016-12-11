@@ -55,6 +55,14 @@
 download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALSE, ...) {
 
   # checks
+  if (!class(date) %in% c("Date", "POSIXlt", "POSIXct")) {
+    stop("MODISSnow: date should be an object of class Date")
+  }
+
+  if (!sat %in% c("MYD10A1", "MOD10A1")) {
+    stop("MODISSnow: unknown satellite requested")
+  }
+
 
 
   folder_date <- base::format(date, "%Y.%m.%d")
