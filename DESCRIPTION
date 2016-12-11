@@ -1,7 +1,7 @@
 Package: MODISSnow
 Type: Package
-Title: Download MODIS snow data
-Version: 0.0.0.1
+Title: Provides functions to download MODIS snow data.
+Version: 0.0.0.2
 Author: Johannes Signer
 Authors@R: person("Johannes", "Signer", email = "jmsigner@gmail.com",
   role = c("aut", "cre"))
