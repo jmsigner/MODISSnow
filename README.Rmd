@@ -15,7 +15,7 @@ devtools::install_github("jmsigner/MODISSnow")
 
 ```{r, eval = FALSE}
 library(MODISSnow)
-# Download MODIS snow data for a central europe h = 18 and v = 5 for the 1 of January 2016
+# Download MODIS snow data for a central Europe h = 18 and v = 5 for the 1 of January 2016
 dat <- download_data(lubridate::ymd("2016-01-01"), h = 18, v = 5)
 class(dat)
 raster::plot(dat)
