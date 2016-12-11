@@ -1,4 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-README
+README.md
+REAMDE.Rmd
+NEWS.md
+cran-comments.md
 ^\.travis\.yml$
