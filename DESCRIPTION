@@ -1,8 +1,7 @@
 Package: MODISSnow
 Type: Package
-Title: Provides functions to download MODIS snow cover
-Version: 0.0.0.2
-Author: Johannes Signer
+Title: Provides Functions to Download MODIS Snow Cover
+Version: 0.0.1.0
 Authors@R: c(
       person("Johannes", "Signer", email = "jmsigner@gmail.com", role = c("aut", "cre")), 
       person("Joel", "Trubilowicz", role = "aut"))
@@ -12,7 +11,9 @@ Imports:
     RCurl,
     lubridate,
     gdalUtils
-License: GPL-2
+URL: https://github.com/jmsigner/MODISSnow
+BugReports: https://github.com/jmsigner/MODISSnow/issues
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1

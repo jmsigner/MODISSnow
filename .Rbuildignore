@@ -5,3 +5,5 @@ README.Rmd
 NEWS.md
 cran-comments.md
 ^\.travis\.yml$
+paper.md
+paper.bib
