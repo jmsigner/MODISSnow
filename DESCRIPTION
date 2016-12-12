@@ -1,7 +1,7 @@
 Package: MODISSnow
 Type: Package
 Title: Provides Functions to Download MODIS Snow Cover
-Version: 0.0.1.0
+Version: 0.1.0.0
 Authors@R: c(
       person("Johannes", "Signer", email = "jmsigner@gmail.com", role = c("aut", "cre")), 
       person("Joel", "Trubilowicz", role = "aut"))

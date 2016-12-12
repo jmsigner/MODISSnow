@@ -4,7 +4,7 @@
 #' @description
 #' \code{download_data} is the main function to download a scene given the correct tile, date and satellite.
 #'
-#' \code{get_tile} is a helper function to actually downloads a tile, given a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to longitude/latitude (EPSG:4326).
+#' \code{get_tile} is a helper function that actually downloads a tile. Supplied with a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to latlong (EPSG:4326).
 #'
 #' @details
 #' When downloading the data, the correct tile has to be specified. At the moment there is no automated way to find the tile. This means that the user has to consult the \href{https://modis-land.gsfc.nasa.gov/MODLAND_grid.html}{MODIS grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} may be used.
@@ -13,7 +13,7 @@
 #' @param tile Name of the tile.
 #' @param progress Indicates whether or not progress is displayed.
 #' @param clean Indidcates whether or not temporary files are deleted.
-#' @param date Day for which snow data should be downloaded as \code{Date}, \code{POSIXct} or \code{POSIXlt}.
+#' @param date Day for which snow data should be downloaded as \code{Date}, \code{POSIXct}, or \code{POSIXlt}.
 #' @param sat Satellite mission used. Currently Terra (\code{"MYD10A1"}) and Aqua (\code{"MOD10A1"}) are supported.
 #' @param h Horizontal tile number, see also details.
 #' @param v Vertical tile number, see also details.
@@ -36,7 +36,7 @@
 #' but see also the documentation for the \emph{NDSI_SNOW_COVER} \href{http://nsidc.org/data/MOD10A1}{here}.
 #'
 #' @references
-#' When using the NDSI snow cover data, please acknowledge the data approriately by
+#' When using the MODIS snow cover data, please acknowledge the data appropriately by
 #' \enumerate{
 #'   \item reading the \href{http://nsidc.org/about/use_copyright.html}{use and copyright}
 #'   \item citing the original data: \emph{Hall, D. K. and G. A. Riggs. 2016. MODIS/[Terra/Aqua] Snow Cover Daily L3 Global 500m Grid, Version 6. [Indicate subset used]. Boulder, Colorado USA. NASA National Snow and Ice Data Center Distributed Active Archive Center. doi: http://dx.doi.org/10.5067/MODIS/MOD10A1.006. [Date Accessed].}
