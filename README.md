@@ -11,15 +11,6 @@ Install
 
 ``` r
 devtools::install_github("jmsigner/MODISSnow")
-#> Downloading GitHub repo jmsigner/MODISSnow@master
-#> from URL https://api.github.com/repos/jmsigner/MODISSnow/zipball/master
-#> Installing MODISSnow
-#> '/usr/lib/R/bin/R' --no-site-file --no-environ --no-save --no-restore  \
-#>   --quiet CMD INSTALL  \
-#>   '/tmp/Rtmp0a5xw7/devtools8f85004e6f7/jmsigner-MODISSnow-543b159'  \
-#>   --library='/home/jsigner/R/x86_64-pc-linux-gnu-library/3.3'  \
-#>   --install-tests
-#> 
 ```
 
 Usage

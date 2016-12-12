@@ -23,7 +23,7 @@ Package to download MODIS snow data from [The National Snow & Ice Data Center](h
 
 # Install
 
-```{r}
+```{r, eval = FALSE}
 devtools::install_github("jmsigner/MODISSnow")
 ```
 
