@@ -1,10 +1,11 @@
 Package: MODISSnow
 Type: Package
-Title: Provides functions to download MODIS snow data.
+Title: Provides functions to download MODIS snow cover
 Version: 0.0.0.2
 Author: Johannes Signer
-Authors@R: person("Johannes", "Signer", email = "jmsigner@gmail.com",
-  role = c("aut", "cre"))
+Authors@R: c(
+      person("Johannes", "Signer", email = "jmsigner@gmail.com", role = c("aut", "cre")), 
+      person("Joel", "Trubilowicz", role = "aut"))
 Description: Download MODIS snow data within R.
 Imports:
     raster,

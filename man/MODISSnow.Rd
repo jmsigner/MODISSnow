@@ -3,7 +3,7 @@
 \name{download_data}
 \alias{download_data}
 \alias{get_tile}
-\title{Download MODIS snowdata from the National Snow and Ice Data Center.}
+\title{Download MODIS snow cover data (version 6) from the National Snow and Ice Data Center.}
 \usage{
 download_data(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALSE,
   ...)
@@ -11,13 +11,13 @@ download_data(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALSE,
 get_tile(ftp, tile, progress = FALSE, clean = TRUE)
 }
 \arguments{
-\item{date}{Day for which snow data should be downloaded as POSIXct.}
+\item{date}{Day for which snow data should be downloaded as \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
-\item{sat}{Satelite mission used. Currently only Terra ("MYD10A1") and Aqua ("MOD10A1") are supported.}
+\item{sat}{Satellite mission used. Currently Terra (\code{"MYD10A1"}) and Aqua (\code{"MOD10A1"}) are supported.}
 
-\item{h}{Horizontal tile number. See also details.}
+\item{h}{Horizontal tile number, see also details.}
 
-\item{v}{Vertical tile number. See also details.}
+\item{v}{Vertical tile number, see also details.}
 
 \item{printFTP}{If \code{TRUE}, the FTP address where the data are downloaded is printed.}
 
@@ -49,10 +49,10 @@ but see also the documentation for the \emph{NDSI_SNOW_COVER} \href{http://nsidc
 \description{
 \code{download_data} is the main function to download a scene given the correct tile, date and satellite.
 
-\code{get_tile} downloads a tile, given a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to longitude/latitude (EPSG:4326).
+\code{get_tile} is a helper function to actually downloads a tile, given a correct \code{ftp} address and \code{tile} the function downloads the MODIS tile, and transforms the coordinate reference system to longitude/latitude (EPSG:4326).
 }
 \details{
-When downloading the data, the correct tile has to be specified. At the moment there is no automated way of doing this. This means that the user has to consult the \href{https://modis-land.gsfc.nasa.gov/MODLAND_grid.html}{MODIS grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} can be use.
+When downloading the data, the correct tile has to be specified. At the moment there is no automated way to find the tile. This means that the user has to consult the \href{https://modis-land.gsfc.nasa.gov/MODLAND_grid.html}{MODIS grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} may be used.
 }
 \examples{
 \dontrun{

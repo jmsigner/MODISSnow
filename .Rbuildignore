@@ -1,7 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 README.md
-REAMDE.Rmd
+README.Rmd
 NEWS.md
 cran-comments.md
 ^\.travis\.yml$
