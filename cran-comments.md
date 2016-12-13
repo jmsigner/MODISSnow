@@ -2,8 +2,8 @@
 ## Changes
 Following suggestions of Kurt Hornik, I
 
-* expanded the package description
-* I fixed a url in the documentation (man/MODISSnow.Rd)
+* expanded the package description,
+* I fixed a url in the documentation (man/MODISSnow.Rd).
 
 # Intital Submission (2016-12-12)
 ## Test environments

@@ -5,7 +5,7 @@ Version: 0.1.0.0
 Authors@R: c(
       person("Johannes", "Signer", email = "jmsigner@gmail.com", role = c("aut", "cre")), 
       person("Joel", "Trubilowicz", role = "aut"))
-Description: Package for downloading Moderate-resolution Imaging Spectroradiometer (MODIS) snow cover data. Global daily snow cover at 500 m resolution is made available by the National Snow and Ice Center Data Center <http://nsidc.org/>.
+Description: Package for downloading Moderate-resolution Imaging Spectroradiometer (MODIS) snow cover data. Global daily snow cover at 500 m resolution derived from MODIS is made available by the National Snow and Ice Center Data Center <http://nsidc.org/>.
 Imports:
     raster,
     RCurl,
