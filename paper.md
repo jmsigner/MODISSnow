@@ -6,14 +6,10 @@ tags:
 authors:
 - name: Johannes Signer
   orcid: 0000-0002-1771-7775
-<<<<<<< HEAD
   affiliation: 1
 affiliations:
   - name: Department of Wildlife Science, University of Göttingen, Germany
     index: 1
-=======
-  affiliation: University of Göttingen, Germany
->>>>>>> 8f5f5daca3008606f910e1351a351a6b2335faf3
 date: 13 December 2016
 bibliography: paper.bib
 ---
