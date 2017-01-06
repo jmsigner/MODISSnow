@@ -7,3 +7,4 @@ cran-comments.md
 ^\.travis\.yml$
 paper.md
 paper.bib
+test-*

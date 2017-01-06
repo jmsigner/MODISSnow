@@ -63,8 +63,6 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALS
     stop("MODISSnow: unknown satellite requested")
   }
 
-
-
   folder_date <- base::format(date, "%Y.%m.%d")
   ftp <- if(sat == 'MYD10A1') {
     paste0('ftp://n5eil01u.ecs.nsidc.org/SAN/MOSA/', sat, '.006/', folder_date, '/')
@@ -95,8 +93,85 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALS
   get_tile(ftp, tile, ...)
 }
 
+#' @export
+#' @rdname MODISSnow
+modis_capabilities <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL = FALSE, user, passwd, ...) {
 
+  # checks
+  if (!class(date) %in% c("Date", "POSIXlt", "POSIXct")) {
+    stop("MODISSnow: date should be an object of class Date")
+  }
+
+  if (!sat %in% c("MYD10A1", "MOD10A1")) {
+    stop("MODISSnow: unknown satellite requested")
+  }
+
+  folder_date <- base::format(date, "%Y.%m.%d")
+  url <- if(sat == 'MYD10A1') {
+    paste0('https://n5eil01u.ecs.nsidc.org/MOSA/', sat, '.006/', folder_date, '/')
+  } else {
+    paste0('https://n5eil01u.ecs.nsidc.org/MOST/', sat, '.006/', folder_date, '/')
+  }
+
+  if (printURL)
+    print(url)
+
+  # Download available files
+  req <- httr::GET(url, httr::authenticate(user, passwd))
+  req <- xml2::read_html(req)
+  fls <- rvest::html_table(req)[[1]]$Name
+  fls <- fls[grepl("hdf$", fls)]
+  tile <- fls[grepl(
+    paste0(sat, ".A", lubridate::year(date), "[0-9]{3}.h", formatC(h, width = 2, flag = 0), "v", formatC(v, width = 2, flag = 0)),
+    fls)]
+
+
+  if (length(tile) != 1) {
+    stop("MODISSnow: requested tile not found")
+  }
+
+  modis_download_tile(url, tile, auth, ...)
+}
+
+#' @rdname  MODISSnow
+#' @export
 #'
+modis_download_file <- function(url, tile, auth, progress = FALSE, clean = TRUE){
+
+  out_file <- file.path(tempdir(), tile)
+  new_file <- paste0(tools::file_path_sans_ext(out_file), ".tif")
+  dst_file <- paste0(tools::file_path_sans_ext(new_file), "_epsg4326.tif")
+
+  if (progress) {
+    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Starting download")
+  }
+
+  httr::GET(paste(url, tile, sep = "/"), auth,
+            httr::write_disk(out_file, overwrite = TRUE))
+
+  if (progress) {
+    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Processing file")
+  }
+
+  sds <- gdalUtils::get_subdatasets(out_file)
+  gdalUtils::gdal_translate(sds[1], dst_dataset = new_file)
+  gdalUtils::gdalwarp(srcfile = new_file,
+                      dstfile = dst_file,
+                      s_srs = "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_def",
+                      t_srs = "EPSG:4326", overwrite = TRUE)
+
+  res <- raster::raster(dst_file)
+  res[] <- raster::getValues(res) # to have values in memory
+
+  if (clean) {
+    file.remove(c(out_file, new_file))
+  }
+
+  return(res)
+
+}
+
+
 #' @rdname  MODISSnow
 #' @export
 #'
@@ -124,7 +199,6 @@ get_tile <- function(ftp, tile, progress = FALSE, clean = TRUE){
     file.remove(c(out_file, new_file))
   }
 
-  # http://nsidc.org/data/MOD10A1
   return(res)
 
 }

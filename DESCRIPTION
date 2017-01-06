@@ -7,10 +7,12 @@ Authors@R: c(
       person("Joel", "Trubilowicz", role = "aut"))
 Description: Package for downloading Moderate-resolution Imaging Spectroradiometer (MODIS) snow cover data. Global daily snow cover at 500 m resolution derived from MODIS is made available by the National Snow and Ice Center Data Center <http://nsidc.org/>.
 Imports:
-    raster,
-    RCurl,
+    gdalUtils,
+    httr,
     lubridate,
-    gdalUtils
+    raster,
+    rvest,
+    xml2,
 URL: https://github.com/jmsigner/MODISSnow
 BugReports: https://github.com/jmsigner/MODISSnow/issues
 License: GPL-3
