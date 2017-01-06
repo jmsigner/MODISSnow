@@ -95,7 +95,7 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALS
 
 #' @export
 #' @rdname MODISSnow
-modis_capabilities <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL = FALSE, user, passwd, ...) {
+modis_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL = FALSE, user, passwd, ...) {
 
   # checks
   if (!class(date) %in% c("Date", "POSIXlt", "POSIXct")) {
@@ -117,7 +117,8 @@ modis_capabilities <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL =
     print(url)
 
   # Download available files
-  req <- httr::GET(url, httr::authenticate(user, passwd))
+  auth <- httr::authenticate(user, passwd)
+  req <- httr::GET(url, auth)
   req <- xml2::read_html(req)
   fls <- rvest::html_table(req)[[1]]$Name
   fls <- fls[grepl("hdf$", fls)]
@@ -136,7 +137,7 @@ modis_capabilities <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL =
 #' @rdname  MODISSnow
 #' @export
 #'
-modis_download_file <- function(url, tile, auth, progress = FALSE, clean = TRUE){
+modis_download_tile <- function(url, tile, auth, progress = FALSE, clean = TRUE){
 
   out_file <- file.path(tempdir(), tile)
   new_file <- paste0(tools::file_path_sans_ext(out_file), ".tif")
