@@ -14,21 +14,35 @@ knitr::opts_chunk$set(
 )
 ```
 
+# MODISSnow
 
 [![Travis-CI Build Status](https://travis-ci.org/jmsigner/MODISSnow.svg?branch=master)](https://travis-ci.org/jmsigner/MODISSnow)
 
-# MODISSnow
+`MODISSnow` allows to download MODIS snow data from [The National Snow & Ice Data Center](http://nsidc.org/).
 
-Package to download MODIS snow data from [The National Snow & Ice Data Center](http://nsidc.org/).
+# Quick start
 
-# Install
+## Install
+
+Stable version von CRAN.
+
+```{r, eval = FALSE}
+install.packages("MODISSnow")
+```
+
+Or the dev version from GitHub.
+
 
 ```{r, eval = FALSE}
 devtools::install_github("jmsigner/MODISSnow")
 ```
 
+## Authentication
 
-# Usage
+As of February 1st 2017, authentication via earthdata is requried. Free registration is possible at [the earthdata portal](https://urs.earthdata.nasa.gov/users/new).
+
+
+## Workflow
 
 ```{r, eval = FALSE}
 library(MODISSnow)
@@ -38,3 +52,7 @@ class(dat)
 raster::plot(dat)
 ```
 
+# Meta
+- Please report [any issues or bugs](https://github.com/ropensci/gistr/issues).
+- License: GPL v3
+- Get citation information for `MODISSnow` in R typing `citation(package = 'MODISSnow')`.
