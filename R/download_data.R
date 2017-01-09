@@ -80,7 +80,7 @@ modissnow_get_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL =
   }
 
   if (printURL)
-    print(url)
+    message(url)
 
   # Download available files
   auth <- httr::authenticate(user, passwd)
