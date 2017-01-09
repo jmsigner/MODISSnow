@@ -2,3 +2,5 @@
 
 export(download_data)
 export(get_tile)
+export(modissnow_download_tile)
+export(modissnow_get_data)

@@ -9,6 +9,9 @@
 #' @details
 #' When downloading the data, the correct tile has to be specified. At the moment there is no automated way to find the tile. This means that the user has to consult the \href{http://landweb.nascom.nasa.gov/developers/is_tiles/is_bound_10deg.txt}{MODIS land grid} to find the correct tile. Alternatively the \href{http://landweb.nascom.nasa.gov/cgi-bin/developer/tilemap.cgi}{MODIS tile calculator} may be used.
 #'
+#' As of February 1st 2017, a username and password for NASA earth explorer are required. Free registration is possible at [the earthdata portal](https://urs.earthdata.nasa.gov/users/new).
+
+#'
 #' @param ftp Address of the repository.
 #' @param tile Name of the tile.
 #' @param progress Indicates whether or not progress is displayed.
@@ -18,6 +21,8 @@
 #' @param h Horizontal tile number, see also details.
 #' @param v Vertical tile number, see also details.
 #' @param printFTP If \code{TRUE}, the FTP address where the data are downloaded is printed.
+#' @param user User name for earth data, see details.
+#' @param passwd Passowrd for earth data, see details.
 #' @param ... Further arguments passed to \code{get_tile()}.
 #'
 #' @return
@@ -47,12 +52,102 @@
 #' @examples
 #' \dontrun{
 #' # Download MODIS snow data for a central europe h = 18 and v = 5 for the 1 of January 2016
-#' dat <- download_data(lubridate::ymd("2016-01-01"), h = 18, v = 5)
+#' dat <- modissnow_get_data(lubridate::ymd("2016-01-01"), h = 18, v = 5, user = "myuser", passwd = "my passwd")
 #' class(dat)
 #' raster::plot(dat)
 #' }
 
+modissnow_get_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL = FALSE, user, passwd, ...) {
+
+  # checks
+  if (!class(date) %in% c("Date", "POSIXlt", "POSIXct")) {
+    stop("MODISSnow: date should be an object of class Date")
+  }
+
+  if (!sat %in% c("MYD10A1", "MOD10A1")) {
+    stop("MODISSnow: unknown satellite requested")
+  }
+
+  if (missing(user) || missing(passwd)) {
+    stop("MODISSnow: username and password for earthdata are required")
+  }
+
+  folder_date <- base::format(date, "%Y.%m.%d")
+  url <- if(sat == 'MYD10A1') {
+    paste0('https://n5eil01u.ecs.nsidc.org/MOSA/', sat, '.006/', folder_date, '/')
+  } else {
+    paste0('https://n5eil01u.ecs.nsidc.org/MOST/', sat, '.006/', folder_date, '/')
+  }
+
+  if (printURL)
+    print(url)
+
+  # Download available files
+  auth <- httr::authenticate(user, passwd)
+  req <- httr::GET(url, auth)
+  req <- xml2::read_html(req)
+  fls <- rvest::html_table(req)[[1]]$Name
+  fls <- fls[grepl("hdf$", fls)]
+  tile <- fls[grepl(
+    paste0(sat, ".A", lubridate::year(date), "[0-9]{3}.h", formatC(h, width = 2, flag = 0), "v", formatC(v, width = 2, flag = 0)),
+    fls)]
+
+
+  if (length(tile) != 1) {
+    stop("MODISSnow: requested tile not found")
+  }
+
+  modissnow_download_tile(url, tile, auth, ...)
+}
+
+#' @rdname  MODISSnow
+#' @export
+#'
+modissnow_download_tile <- function(url, tile, auth, progress = FALSE, clean = TRUE){
+
+  out_file <- file.path(tempdir(), tile)
+  new_file <- paste0(tools::file_path_sans_ext(out_file), ".tif")
+  dst_file <- paste0(tools::file_path_sans_ext(new_file), "_epsg4326.tif")
+
+  if (progress) {
+    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Starting download")
+  }
+
+  httr::GET(paste(url, tile, sep = "/"), auth,
+            httr::write_disk(out_file, overwrite = TRUE))
+
+  if (progress) {
+    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Processing file")
+  }
+
+  sds <- gdalUtils::get_subdatasets(out_file)
+  gdalUtils::gdal_translate(sds[1], dst_dataset = new_file)
+  gdalUtils::gdalwarp(srcfile = new_file,
+                      dstfile = dst_file,
+                      s_srs = "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_def",
+                      t_srs = "EPSG:4326", overwrite = TRUE)
+
+  res <- raster::raster(dst_file)
+  res[] <- raster::getValues(res) # to have values in memory
+
+  if (clean) {
+    file.remove(c(out_file, new_file))
+  }
+
+  return(res)
+
+}
+
+
+# Deprecated function (no https authentication) ---------------------------
+
+
+#' @rdname  MODISSnow
+#' @export
+#'
+
 download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALSE, ...) {
+  .Deprecated("modis_data")
 
   # checks
   if (!class(date) %in% c("Date", "POSIXlt", "POSIXct")) {
@@ -93,90 +188,13 @@ download_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printFTP = FALS
   get_tile(ftp, tile, ...)
 }
 
-#' @export
-#' @rdname MODISSnow
-modis_data <- function(date, sat = "MYD10A1", h = 10, v = 10, printURL = FALSE, user, passwd, ...) {
-
-  # checks
-  if (!class(date) %in% c("Date", "POSIXlt", "POSIXct")) {
-    stop("MODISSnow: date should be an object of class Date")
-  }
-
-  if (!sat %in% c("MYD10A1", "MOD10A1")) {
-    stop("MODISSnow: unknown satellite requested")
-  }
-
-  folder_date <- base::format(date, "%Y.%m.%d")
-  url <- if(sat == 'MYD10A1') {
-    paste0('https://n5eil01u.ecs.nsidc.org/MOSA/', sat, '.006/', folder_date, '/')
-  } else {
-    paste0('https://n5eil01u.ecs.nsidc.org/MOST/', sat, '.006/', folder_date, '/')
-  }
-
-  if (printURL)
-    print(url)
-
-  # Download available files
-  auth <- httr::authenticate(user, passwd)
-  req <- httr::GET(url, auth)
-  req <- xml2::read_html(req)
-  fls <- rvest::html_table(req)[[1]]$Name
-  fls <- fls[grepl("hdf$", fls)]
-  tile <- fls[grepl(
-    paste0(sat, ".A", lubridate::year(date), "[0-9]{3}.h", formatC(h, width = 2, flag = 0), "v", formatC(v, width = 2, flag = 0)),
-    fls)]
-
-
-  if (length(tile) != 1) {
-    stop("MODISSnow: requested tile not found")
-  }
-
-  modis_download_tile(url, tile, auth, ...)
-}
-
 #' @rdname  MODISSnow
 #' @export
 #'
-modis_download_tile <- function(url, tile, auth, progress = FALSE, clean = TRUE){
 
-  out_file <- file.path(tempdir(), tile)
-  new_file <- paste0(tools::file_path_sans_ext(out_file), ".tif")
-  dst_file <- paste0(tools::file_path_sans_ext(new_file), "_epsg4326.tif")
-
-  if (progress) {
-    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Starting download")
-  }
-
-  httr::GET(paste(url, tile, sep = "/"), auth,
-            httr::write_disk(out_file, overwrite = TRUE))
-
-  if (progress) {
-    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Processing file")
-  }
-
-  sds <- gdalUtils::get_subdatasets(out_file)
-  gdalUtils::gdal_translate(sds[1], dst_dataset = new_file)
-  gdalUtils::gdalwarp(srcfile = new_file,
-                      dstfile = dst_file,
-                      s_srs = "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_def",
-                      t_srs = "EPSG:4326", overwrite = TRUE)
-
-  res <- raster::raster(dst_file)
-  res[] <- raster::getValues(res) # to have values in memory
-
-  if (clean) {
-    file.remove(c(out_file, new_file))
-  }
-
-  return(res)
-
-}
-
-
-#' @rdname  MODISSnow
-#' @export
-#'
 get_tile <- function(ftp, tile, progress = FALSE, clean = TRUE){
+
+  .Deprecated("modissnow_download_tile")
 
   out_file <- file.path(tempdir(), tile)
   new_file <- paste0(tools::file_path_sans_ext(out_file), ".tif")
