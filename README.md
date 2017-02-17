@@ -2,7 +2,7 @@
 MODISSnow
 =========
 
-[![Travis-CI Build Status](https://travis-ci.org/jmsigner/MODISSnow.svg?branch=master)](https://travis-ci.org/jmsigner/MODISSnow)
+[![Travis-CI Build Status](https://travis-ci.org/jmsigner/MODISSnow.svg?branch=master)](https://travis-ci.org/jmsigner/MODISSnow) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/MODISSnow)](http://cran.r-project.org/package=MODISSnow) ![](https://cranlogs.r-pkg.org/badges/MODISSnow)
 
 `MODISSnow` allows to download MODIS snow data from [The National Snow & Ice Data Center](http://nsidc.org/).
 
