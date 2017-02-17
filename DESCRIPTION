@@ -11,6 +11,7 @@ Imports:
     httr,
     lubridate,
     raster,
+    RCurl,
     rvest,
     xml2,
 URL: https://github.com/jmsigner/MODISSnow

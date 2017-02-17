@@ -12,6 +12,7 @@
 #' As of February 1st 2017, a username and password for NASA earth explorer are required. Free registration is possible at [the earthdata portal](https://urs.earthdata.nasa.gov/users/new).
 
 #'
+#' @param auth Object of class \code{request} created with \code{httr:authenticate}.
 #' @param ftp Address of the repository.
 #' @param tile Name of the tile.
 #' @param progress Indicates whether or not progress is displayed.
@@ -21,7 +22,9 @@
 #' @param h Horizontal tile number, see also details.
 #' @param v Vertical tile number, see also details.
 #' @param printFTP If \code{TRUE}, the FTP address where the data are downloaded is printed.
+#' @param printURL If \code{TRUE}, the URL address where the data are downloaded is printed.
 #' @param user User name for earth data, see details.
+#' @param url URL to download a tile.
 #' @param passwd Passowrd for earth data, see details.
 #' @param ... Further arguments passed to \code{get_tile()}.
 #'
@@ -52,7 +55,8 @@
 #' @examples
 #' \dontrun{
 #' # Download MODIS snow data for a central europe h = 18 and v = 5 for the 1 of January 2016
-#' dat <- modissnow_get_data(lubridate::ymd("2016-01-01"), h = 18, v = 5, user = "myuser", passwd = "my passwd")
+#' dat <- modissnow_get_data(lubridate::ymd("2016-01-01"), h = 18, v = 5,
+#'                           user = "myuser", passwd = "my passwd")
 #' class(dat)
 #' raster::plot(dat)
 #' }
@@ -110,14 +114,14 @@ modissnow_download_tile <- function(url, tile, auth, progress = FALSE, clean = T
   dst_file <- paste0(tools::file_path_sans_ext(new_file), "_epsg4326.tif")
 
   if (progress) {
-    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Starting download")
+    cat("[", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "]: Start download\n")
   }
 
   httr::GET(paste(url, tile, sep = "/"), auth,
             httr::write_disk(out_file, overwrite = TRUE))
 
   if (progress) {
-    cat("[", format(Sys.time(), "%H-%M-%S"), "]: Processing file")
+    cat("[", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "]: Processing file\n")
   }
 
   sds <- gdalUtils::get_subdatasets(out_file)

@@ -26,13 +26,19 @@ get_tile(ftp, tile, progress = FALSE, clean = TRUE)
 
 \item{v}{Vertical tile number, see also details.}
 
+\item{printURL}{If \code{TRUE}, the URL address where the data are downloaded is printed.}
+
 \item{user}{User name for earth data, see details.}
 
 \item{passwd}{Passowrd for earth data, see details.}
 
 \item{...}{Further arguments passed to \code{get_tile()}.}
 
+\item{url}{URL to download a tile.}
+
 \item{tile}{Name of the tile.}
+
+\item{auth}{Object of class \code{request} created with \code{httr:authenticate}.}
 
 \item{progress}{Indicates whether or not progress is displayed.}
 
@@ -70,7 +76,8 @@ As of February 1st 2017, a username and password for NASA earth explorer are req
 \examples{
 \dontrun{
 # Download MODIS snow data for a central europe h = 18 and v = 5 for the 1 of January 2016
-dat <- modissnow_get_data(lubridate::ymd("2016-01-01"), h = 18, v = 5, user = "myuser", passwd = "my passwd")
+dat <- modissnow_get_data(lubridate::ymd("2016-01-01"), h = 18, v = 5,
+                          user = "myuser", passwd = "my passwd")
 class(dat)
 raster::plot(dat)
 }
